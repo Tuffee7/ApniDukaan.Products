@@ -87,7 +87,7 @@ namespace Products.Business.Services
         public async Task<List<ProductResponse?>> GetProducts()
         {
             IEnumerable<Product?> products = await _productRepository.GetProductsAsync();
-            
+
             if (products == null)
                 return null;
 

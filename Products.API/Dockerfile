@@ -38,6 +38,9 @@ RUN dotnet publish "./Products.API.csproj" -c $BUILD_CONFIGURATION -o /app/publi
 FROM base AS final
 WORKDIR /app
 ENV MSSQL_HOST=localhost
-ENV MSSQL_SA_PASSWORD=Tuffee@27897
+ENV MSSQL_PORT=1433
+ENV MSSQL_DATABASE=ApniDukaanProducts
+ENV MSSQL_USER=sa
+ENV MSSQL_PASSWORD=admin
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Products.API.dll"]

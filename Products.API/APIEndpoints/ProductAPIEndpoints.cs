@@ -25,9 +25,7 @@ namespace Products.API.APIEndpoints
                 ProductResponse? product = await productService.GetSingleProductByCondition(x => x.ProductID == ProductID);
 
                 if (product == null)
-                {
                     return Results.NotFound();
-                }
 
                 return Results.Ok(product);
             });

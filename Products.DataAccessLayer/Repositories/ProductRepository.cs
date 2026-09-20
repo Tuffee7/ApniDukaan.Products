@@ -59,7 +59,7 @@ namespace Products.Data.Repositories
             {
                 return null;
             }
-            
+
             existingProduct.ProductName = product.ProductName;
             existingProduct.Price = product.Price;
             existingProduct.QuantityInStock = product.QuantityInStock;

@@ -16,7 +16,7 @@ namespace Products.Data.DatabaseContext
         {
             base.OnModelCreating(modelBuilder);
 
-
+            modelBuilder.Entity<Product>().ToTable("Products");
         }
     }
 }

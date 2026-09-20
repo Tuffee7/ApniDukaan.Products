@@ -12,22 +12,29 @@ namespace Products.Data
         public static IServiceCollection AddDataAccessLayer(this IServiceCollection services, IConfiguration configuration)
         {
             // TODO: Add your data access layer services here into the IoC container:
-            string connectionStringTemplate = configuration.GetConnectionString("DefaultConnection")!;
+            var connectionStringTemplate = configuration.GetConnectionString("ProductsSqlConnection")!;
 
-            string connectionString = connectionStringTemplate;
+            var host = Environment.GetEnvironmentVariable("MSSQL_HOST") ?? string.Empty;
+            var port = Environment.GetEnvironmentVariable("MSSQL_PORT") ?? string.Empty;
+            var database = Environment.GetEnvironmentVariable("MSSQL_DATABASE") ?? string.Empty;
+            var user = Environment.GetEnvironmentVariable("MSSQL_USER") ?? string.Empty;
+            var password = Environment.GetEnvironmentVariable("MSSQL_PASSWORD") ?? string.Empty;
 
-            string? mssqlHost = Environment.GetEnvironmentVariable("MSSQL_HOST");
-            string? mssqlPassword = Environment.GetEnvironmentVariable("MSSQL_SA_PASSWORD");
-
-            if (!string.IsNullOrEmpty(mssqlHost))
+            if (string.IsNullOrWhiteSpace(host) ||
+                string.IsNullOrWhiteSpace(port) ||
+                string.IsNullOrWhiteSpace(database) ||
+                string.IsNullOrWhiteSpace(user) ||
+                string.IsNullOrWhiteSpace(password))
             {
-                connectionString = connectionString.Replace("$MSSQL_HOST", mssqlHost);
+                throw new InvalidOperationException("One or more MSSQL_* environment variables are missing. Ensure the selected launch profile provides MSSQL_HOST, MSSQL_PORT, MSSQL_DATABASE, MSSQL_USER and MSSQL_PASSWORD.");
             }
 
-            if (!string.IsNullOrEmpty(mssqlPassword))
-            {
-                connectionString = connectionString.Replace("$MSSQL_SA_PASSWORD", mssqlPassword);
-            }
+            var connectionString = connectionStringTemplate
+                .Replace("$MSSQL_HOST", host)
+                .Replace("$MSSQL_PORT", port)
+                .Replace("$MSSQL_DATABASE", database)
+                .Replace("$MSSQL_USER", user)
+                .Replace("$MSSQL_PASSWORD", password);
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
